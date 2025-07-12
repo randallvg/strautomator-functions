@@ -9,14 +9,15 @@ const settings = require("setmeup").settings
 dayjs.extend(dayjsDayOfYear)
 
 /**
- * Refresh Spotify tokens and profiles for users with expired tokens.
+ * Refresh (some) Spotify tokens and profiles for users with expired tokens.
  */
 export const refreshTokens = async () => {
     logger.info("F.Spotify.refreshTokens.start")
 
     try {
         const now = dayjs()
-        const users = _.shuffle(await core.users.getWithSpotify())
+        const spotifyUsers = await core.users.getWithSpotify()
+        const users = _.sampleSize(_.shuffle(spotifyUsers), Math.round(spotifyUsers.length / 2))
         let count = 0
 
         const refreshToken = async (user) => {

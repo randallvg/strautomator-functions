@@ -47,7 +47,7 @@ const validateSubscription = async (subscription: core.BaseSubscription, user: U
     }
 
     // Expired but still with an active-like status? Update to EXPIRED status and switch user to free.
-    if (!nonActiveStatus.includes(subscription.status) && subscription.dateExpiry && now.isAfter(dayjs(subscription.dateExpiry).startOf("day"))) {
+    if (!nonActiveStatus.includes(subscription.status) && user.subscriptionId == subscription.id && subscription.dateExpiry && now.isAfter(dayjs(subscription.dateExpiry).startOf("day"))) {
         logger.info("F.Subscriptions.validateSubscription", core.logHelper.subscriptionUser(subscription), "Expired")
         subscription.status = "EXPIRED"
         subscription.pendingUpdate = true
@@ -202,7 +202,7 @@ export const checkGitHub = async () => {
                 if (liveData) {
                     const hasLive = liveData.find((s) => s.id == subscription.id)
                     const hasActive = activeSubs.find((s) => s.userId == subscription.userId && subscription.source != "github")
-                    if (liveData && !hasLive && !hasActive) {
+                    if (liveData && !hasLive && !hasActive && !user.paddleId) {
                         logger.info("F.Subscriptions.checkGitHub", core.logHelper.subscriptionUser(subscription), "Not found or active on GitHub")
                         subscription.status = "EXPIRED"
                         subscription.pendingUpdate = true
@@ -247,7 +247,6 @@ export const checkPayPal = async () => {
                 }
 
                 // Make sure subscription is in sync with live PayPal data.
-
                 const liveData = (await core.paypal.subscriptions.getSubscription(subscription.id)) as core.PayPalSubscription
                 const paypalSubscription = subscription as PayPalSubscription
 
@@ -270,7 +269,7 @@ export const checkPayPal = async () => {
                         const lastPaymentDate = dayjs.utc(liveData.lastPayment?.date || liveData.dateUpdated)
                         const expiryDate = paypalSubscription.frequency == "monthly" ? lastPaymentDate.add(4, "weeks") : lastPaymentDate.add(11, "months")
                         const hasActive = activeSubs.find((a) => a.userId == subscription.userId)
-                        if (!hasActive && now.isAfter(expiryDate)) {
+                        if (!hasActive && !user.paddleId && now.isAfter(expiryDate)) {
                             logger.info("F.Subscriptions.checkPayPal", core.logHelper.subscriptionUser(subscription), "Unpaid subscription")
                             await core.users.switchToFree(user, paypalSubscription)
                         }

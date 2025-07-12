@@ -12,6 +12,7 @@ const startupCheck = async (enabledModules) => {
 
 // Settings and individual function modules.
 const settings = require("setmeup").settings
+const affiliates = require("./lib/affiliates")
 const calendar = require("./lib/calendar")
 const gearwear = require("./lib/gearwear")
 const maps = require("./lib/maps")
@@ -54,7 +55,7 @@ exports.hourlyTasks = async () => {
 
 // Daily tasks wrapper.
 exports.dailyTasks = async () => {
-    await startupCheck(["calendar", "gearwear", "komoot", "mailer", "recipes", "strava", "subscriptions", "users"])
+    await startupCheck(["affiliates", "calendar", "gearwear", "komoot", "mailer", "recipes", "strava", "subscriptions", "users"])
 
     try {
         await gearwear.processRecentActivities()
@@ -64,6 +65,7 @@ exports.dailyTasks = async () => {
         await strava.apiCheckStatus()
         await users.resetRecipeCounters()
         await subscriptions.checkExpiring()
+        await affiliates.downloadAwinPromotions()
     } catch (ex) {
         logger.warn("Functions.dailyTasks", ex.message || ex.toString())
     }
@@ -76,7 +78,7 @@ exports.monthlyTasks = async () => {
 
     try {
         await notifications.sendEmailReminders()
-        await gearwear.notifyIdle()
+        await gearwear.notifyRecentIdle()
         await users.deleteArchivedStats()
         await subscriptions.checkMissing()
         await subscriptions.checkGitHub()

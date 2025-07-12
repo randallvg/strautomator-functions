@@ -31,7 +31,7 @@ export const processRecentActivities = async () => {
  * Notify users about recently updated GearWear configurations with idle components.
  */
 export const notifyRecentIdle = async () => {
-    logger.info("F.GearWear.notifyIdle.start")
+    logger.info("F.GearWear.notifyRecentIdle.start")
 
     try {
         const now = dayjs()
@@ -53,6 +53,6 @@ export const notifyRecentIdle = async () => {
             }
         }
     } catch (ex) {
-        logger.error("F.GearWear.notifyIdle", ex)
+        logger.error("F.GearWear.notifyRecentIdle", ex)
     }
 }

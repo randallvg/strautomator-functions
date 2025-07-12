@@ -228,7 +228,7 @@ export const resetRecipeCounters = async () => {
 
         // Iterate users and reset the recipe counters for each one of them.
         for (let user of users) {
-            const recipes = Object.values(user.recipes)
+            const recipes = Object.values(user.recipes).filter((r) => !r.counterNoReset)
 
             for (let recipe of recipes) {
                 await core.recipes.stats.setCounter(user, recipe, 0)

@@ -31,7 +31,7 @@ const updateCounters = async () => {
             activities: await strava.countActivities(),
             recipes: await users.countRecipeUsage(),
             users: await users.countUsers(),
-            subscriptions: await subscriptions.countSubscriptions()
+//            subscriptions: await subscriptions.countSubscriptions()
         }
 
         await core.database.appState.set("stats", stats)
@@ -42,20 +42,22 @@ const updateCounters = async () => {
 
 // Hourly tasks wrapper.
 exports.hourlyTasks = async () => {
-    await startupCheck(["calendar", "komoot", "mailer", "maps", "strava", "subscriptions", "users", "weather"])
+//    await startupCheck(["calendar", "komoot", "mailer", "maps", "strava", "subscriptions", "users", "weather"])
+    await startupCheck(["calendar", "mailer", "maps", "strava", "users", "weather"])
 
     try {
         await calendar.regenerate()
         await strava.apiCheckStatus()
     } catch (ex) {
-        logger.warn("Functions.dailyTasks", ex.message || ex.toString())
+        logger.warn("Functions.hourlyTasks", ex.message || ex.toString())
     }
     return
 }
 
 // Daily tasks wrapper.
 exports.dailyTasks = async () => {
-    await startupCheck(["affiliates", "calendar", "gearwear", "komoot", "mailer", "recipes", "strava", "subscriptions", "users"])
+//    await startupCheck(["affiliates", "calendar", "gearwear", "komoot", "mailer", "recipes", "strava", "subscriptions", "users"])
+    await startupCheck(["calendar", "gearwear", "mailer", "recipes", "strava", "users"])
 
     try {
         await gearwear.processRecentActivities()
@@ -64,8 +66,8 @@ exports.dailyTasks = async () => {
         await strava.cleanupCache()
         await strava.apiCheckStatus()
         await users.resetRecipeCounters()
-        await subscriptions.checkExpiring()
-        await affiliates.downloadAwinPromotions()
+//        await subscriptions.checkExpiring()
+//        await affiliates.downloadAwinPromotions()
     } catch (ex) {
         logger.warn("Functions.dailyTasks", ex.message || ex.toString())
     }
@@ -74,15 +76,16 @@ exports.dailyTasks = async () => {
 
 // Monthly tasks (executed monthly on the 15th).
 exports.monthlyTasks = async () => {
-    await startupCheck(["calendar", "gearwear", "github", "mailer", "notifications", "paddle", "paypal", "strava", "subscriptions", "users"])
+//    await startupCheck(["calendar", "gearwear", "github", "mailer", "notifications", "paddle", "paypal", "strava", "subscriptions", "users"])
+    await startupCheck(["calendar", "gearwear", "mailer", "notifications", "strava", "users"])
 
     try {
         await notifications.sendEmailReminders()
         await gearwear.notifyRecentIdle()
         await users.deleteArchivedStats()
-        await subscriptions.checkMissing()
-        await subscriptions.checkGitHub()
-        await subscriptions.checkPayPal()
+//        await subscriptions.checkMissing()
+//        await subscriptions.checkGitHub()
+//        await subscriptions.checkPayPal()
     } catch (ex) {
         logger.warn("Functions.monthlyTasks", ex.message || ex.toString())
     }
@@ -91,7 +94,8 @@ exports.monthlyTasks = async () => {
 
 // Weekend maintenance wrapper.
 exports.weekendMaintenance = async () => {
-    await startupCheck(["calendar", "gearwear", "maps", "notifications", "paddle", "spotify", "strava", "subscriptions", "users", "wahoo"])
+//    await startupCheck(["calendar", "gearwear", "maps", "notifications", "paddle", "spotify", "strava", "subscriptions", "users", "wahoo"])
+    await startupCheck(["calendar", "gearwear", "maps", "notifications", "strava", "subscriptions", "users"])
 
     try {
         await maps.cleanup()
@@ -100,9 +104,9 @@ exports.weekendMaintenance = async () => {
         await users.cleanupIdle()
         await users.disableFailingRecipes()
         await users.updateFitnessLevel()
-        await subscriptions.checkNonActive()
-        await spotify.refreshTokens()
-        await wahoo.refreshTokens()
+//        await subscriptions.checkNonActive()
+//        await spotify.refreshTokens()
+//        await wahoo.refreshTokens()
         await updateCounters()
     } catch (ex) {
         logger.warn("Functions.weekendMaintenance", ex.message || ex.toString())
@@ -112,11 +116,12 @@ exports.weekendMaintenance = async () => {
 
 // Weekly tasks (executed on Wednesday evening).
 exports.weeklyTasks = async () => {
-    await startupCheck(["github", "strava", "subscriptions", "users"])
+//    await startupCheck(["github", "strava", "subscriptions", "users"])
+    await startupCheck(["strava", "users"])
 
     try {
         await users.performanceProcess()
-        await subscriptions.checkNonActive()
+//        await subscriptions.checkNonActive()
         await updateCounters()
     } catch (ex) {
         logger.warn("Functions.weeklyTasks", ex.message || ex.toString())

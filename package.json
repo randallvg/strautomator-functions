@@ -11,7 +11,7 @@
         "url": "https://github.com/randallvg/strautomator-functions.git"
     },
     "dependencies": {
-        "strautomator-core": "https://user@github.com/randallvg/strautomator-core.git"
+        "strautomator-core": "randallvg/strautomator-core.git"
     },
     "devDependencies": {
         "@types/express": "^4.17.17",

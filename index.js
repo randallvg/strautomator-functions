@@ -12,16 +12,16 @@ const startupCheck = async (enabledModules) => {
 
 // Settings and individual function modules.
 const settings = require("setmeup").settings
-const affiliates = require("./lib/affiliates")
+//const affiliates = require("./lib/affiliates")
 const calendar = require("./lib/calendar")
 const gearwear = require("./lib/gearwear")
 const maps = require("./lib/maps")
 const notifications = require("./lib/notifications")
-const spotify = require("./lib/spotify")
+//const spotify = require("./lib/spotify")
 const strava = require("./lib/strava")
-const subscriptions = require("./lib/subscriptions")
+//const subscriptions = require("./lib/subscriptions")
 const users = require("./lib/users")
-const wahoo = require("./lib/wahoo")
+//const wahoo = require("./lib/wahoo")
 const logger = require("anyhow")
 
 // Helper to update users, activities and usage stats.

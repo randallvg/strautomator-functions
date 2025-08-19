@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "baseUrl": "",
+        "rootDir": "src",
+        "outDir": "lib",
+        "target": "ES2023",
+        "module": "CommonJS",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "noUnusedParameters": true,
+        "noUnusedLocals": true,
+        "declaration": true,
+        "skipLibCheck": true,
+        "paths": {
+            "anyhow": ["node_modules/anyhow/", "../api/node_modules/anyhow/"],
+            "setmeup": ["node_modules/setmeup/", "../api/node_modules/setmeup/"]
+        }
+    }
+}

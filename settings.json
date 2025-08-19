@@ -4,5 +4,9 @@
 {
     "app": {
         "url": "https://autostrive.nl/"
-    }
+    },
+
+    "gcp": {
+        "projectId": "auto-strive"
+    },
 }
